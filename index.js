@@ -1,8 +1,9 @@
-import Taro from "@tarojs/taro";
+var Taro = require("@tarojs/taro");
 
-const info = () => {
-  window.__vnmfInfo = Taro.getSystemInfoSync();
-};
-export default {
-  info,
-};
+class VnmfInfo {
+  constructor() {
+    window.__vnmfInfo = Taro.getSystemInfoSync()
+  }
+}
+
+const vnm = new VnmfInfo();
