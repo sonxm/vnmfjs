@@ -1,3 +1,7 @@
 import Taro from "@tarojs/taro";
 
-window.__vnmfInfo = Taro.getSystemInfoSync()
+const info = () => {
+  window.__vnmfInfo = Taro.getSystemInfoSync();
+};
+export default info;
+  
