@@ -27,3 +27,5 @@ class VnmfInfo {
     return data;
   }
 }
+
+export default VnmfInfo;
