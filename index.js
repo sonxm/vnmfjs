@@ -6,7 +6,9 @@ class VnmfInfo {
   }
   createPayment(order) {
     const key = "186d1aeb795dfe1012f992e0965dd618";
-    alert({ action: "PAYMENT", data: this.encrypt(JSON.stringify(order), key) });
+    alert(
+      this.encrypt({ action: "PAYMENT", data: JSON.stringify(order) }, key)
+    );
   }
   encrypt(inputData, key) {
     var iv_base64 = CryptoJS.enc.Base64.stringify(
