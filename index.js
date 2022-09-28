@@ -7,7 +7,7 @@ class VnmfInfo {
   createPayment(order) {
     const key = "186d1aeb795dfe1012f992e0965dd618";
     alert(
-      this.encrypt({ action: "PAYMENT", data: JSON.stringify(order) }, key)
+      this.encrypt(JSON.stringify({ action: "PAYMENT", data: JSON.stringify(order) }), key)
     );
   }
   encrypt(inputData, key) {
