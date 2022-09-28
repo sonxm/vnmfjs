@@ -1,7 +1,7 @@
 var Taro = require("@tarojs/taro");
 var CryptoJS = require("crypto-js");
 
-export default class VnmfInfo {
+class VnmfInfo {
   constructor() {
     window.__vnmfInfo = Taro.getSystemInfoSync();
   }
@@ -36,4 +36,4 @@ export default class VnmfInfo {
   }
 }
 
-module.exports.Vnp = new VnmfInfo();
+export default VnmfInfo;
