@@ -1,18 +1,41 @@
-var Taro = require("@tarojs/taro");
 var CryptoJS = require("crypto-js");
 
 class VnmfInfo {
   constructor() {
-    window.__vnmfInfo = Taro.getSystemInfoSync();
+    const key = "186d1aeb795dfe1012f992e0965dd618";
+    this.createRequestCallUser();
+    window.getUser = (info) => {
+      var tmp = this.decrypt(info, key);
+      if (tmp.status == "SUCCESS") {
+        this.userfInfo = tmp;
+      } else if (tmp.status != "ERROR") {
+        this.createRequestCallUser();
+      }
+    };
+  }
+  getUserInfo() {
+    return this.userfInfo;
+  }
+  createRequestCallUser() {
+    const key = "186d1aeb795dfe1012f992e0965dd618";
+    alert(
+      JSON.stringify(
+        this.encrypt(
+          JSON.stringify({
+            action: "get_user_info",
+            field: "fullname|email|phone",
+            function: "getUser",
+          }),
+          key
+        )
+      )
+    );
   }
   createPayment(order) {
     const key = "186d1aeb795dfe1012f992e0965dd618";
     alert(
       JSON.stringify(
-        this.encrypt(
-          JSON.stringify({ action: "PAYMENT", data: JSON.stringify(order) }),
-          key
-        )
+        this.encrypt(JSON.stringify({ action: "PAYMENT", data: order }), key)
       )
     );
   }
@@ -33,6 +56,24 @@ class VnmfInfo {
     );
     data = iv.concat(encrypted.ciphertext).toString(CryptoJS.enc.Base64);
     return data;
+  }
+  decrypt(ciphertext, key) {
+    var iv = CryptoJS.enc.Base64.parse(ciphertext);
+    iv.words = iv.words.slice(0, 4);
+    iv.sigBytes = 16;
+    var encrypted = CryptoJS.enc.Base64.parse(ciphertext);
+    encrypted.sigBytes = encrypted.sigBytes - 16;
+    encrypted.words = encrypted.words.slice(4, encrypted.words.length);
+    var decrypted = CryptoJS.AES.decrypt(
+      encrypted.toString(CryptoJS.enc.Base64),
+      CryptoJS.enc.Utf8.parse(key),
+      {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      }
+    );
+    return decrypted.toString(CryptoJS.enc.Utf8);
   }
 }
 
