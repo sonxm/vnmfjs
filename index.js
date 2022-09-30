@@ -5,10 +5,10 @@ class VnmfInfo {
     const key = "186d1aeb795dfe1012f992e0965dd618";
     this.createRequestCallUser();
     window.getUser = (info) => {
-      var tmp = this.decrypt(info, key);
+      var tmp = JSON.parse(this.decrypt(info, key));
       if (tmp.status == "SUCCESS") {
         this.userfInfo = tmp;
-      } else if (tmp.status != "ERROR") {
+      } else if (tmp.status != "PERMISSION_DENIED") {
         this.createRequestCallUser();
       }
     };
@@ -35,7 +35,7 @@ class VnmfInfo {
     const key = "186d1aeb795dfe1012f992e0965dd618";
     alert(
       JSON.stringify(
-        this.encrypt(JSON.stringify({ action: "PAYMENT", data: order }), key)
+        this.encryptJson({ action: "payment", data: order }, key)
       )
     );
   }
@@ -47,6 +47,24 @@ class VnmfInfo {
     var data = inputData;
     var encrypted = CryptoJS.AES.encrypt(
       CryptoJS.enc.Utf8.parse(data),
+      CryptoJS.enc.Utf8.parse(key),
+      {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      }
+    );
+    data = iv.concat(encrypted.ciphertext).toString(CryptoJS.enc.Base64);
+    return data;
+  }
+  encryptJson(inputData, key) {
+    var iv_base64 = CryptoJS.enc.Base64.stringify(
+      CryptoJS.lib.WordArray.random(16)
+    );
+    var iv = CryptoJS.enc.Base64.parse(iv_base64);
+    var data = inputData;
+    var encrypted = CryptoJS.AES.encrypt(
+      JSON.stringify(data),
       CryptoJS.enc.Utf8.parse(key),
       {
         iv: iv,
