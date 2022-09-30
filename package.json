@@ -1,6 +1,6 @@
 {
   "name": "vnmfjs",
-  "version": "1.1.27",
+  "version": "1.1.28",
   "description": "",
   "scripts": {
     "dev": "node node_modules/webpack/bin/webpack.js --mode production --watch --progress",

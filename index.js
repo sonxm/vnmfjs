@@ -20,12 +20,12 @@ class VnmfInfo {
     const key = "186d1aeb795dfe1012f992e0965dd618";
     alert(
       JSON.stringify(
-        this.encrypt(
-          JSON.stringify({
+        this.encryptJson(
+          {
             action: "get_user_info",
             field: "fullname|email|phone",
             function: "getUser",
-          }),
+          },
           key
         )
       )
