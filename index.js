@@ -12,16 +12,16 @@ window.vnmf.requestUserInfo = (
   requestNative({
     action: "get_user_info",
     field: "fullname|email|phone",
-    function: "vnmf.assignUserInfo",
+    function: "vnmf.userInfoCallBack",
   });
-  window.vnmf["userInfoCallBack"] = input.success;
+  window.vnmf["assignUserInfo"] = input.success;
 };
 
-window.vnmf.assignUserInfo = function (data) {
+window.vnmf.userInfoCallBack = function (data) {
   const key = "186d1aeb795dfe1012f992e0965dd618";
   var tmp = JSON.parse(decrypt(data, key));
   if (tmp.status == "SUCCESS") {
-    window.vnmf["userInfoCallBack"](tmp);
+    window.vnmf["assignUserInfo"](tmp);
   } else if (tmp.status != "PERMISSION_DENIED") {
     /// TODO: fail
   }
@@ -31,11 +31,11 @@ window.vnmf.requestPayment = (
   input = { data: data, success: (callback = (res) => {}) }
 ) => {
   requestNative({ action: "payment", data: input.data });
-  window.vnmf["paymentCallBack"] = input.success;
+  window.vnmf["assignPayment"] = input.success;
 };
 
-window.vnmf.assignPayment = function (data) {
-  window.vnmf["paymentCallBack"](data);
+window.vnmf.paymentCallBack = function (data) {
+  window.vnmf["assignPayment"](data);
 };
 const encryptJson = (inputData, key) => {
   var iv_base64 = CryptoJS.enc.Base64.stringify(
