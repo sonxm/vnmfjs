@@ -35,7 +35,9 @@ window.vnmf.requestPayment = (
 };
 
 window.vnmf.paymentCallBack = function (data) {
-  window.vnmf["assignPayment"](data);
+  const key = "186d1aeb795dfe1012f992e0965dd618";
+  var tmp = JSON.parse(decrypt(data, key));
+  window.vnmf["assignPayment"](tmp);
 };
 const encryptJson = (inputData, key) => {
   var iv_base64 = CryptoJS.enc.Base64.stringify(
