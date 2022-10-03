@@ -1,44 +1,46 @@
 var CryptoJS = require("crypto-js");
 
-window.vnmf = {};
-const requestNative = (data) => {
-  const key = "186d1aeb795dfe1012f992e0965dd618";
-  var tmp = encryptJson(data, key);
-  alert(tmp);
-};
-window.vnmf.requestUserInfo = (
-  input = { success: (callback = (res) => {}) }
-) => {
-  requestNative({
-    action: "get_user_info",
-    field: "fullname|email|phone",
-    function: "vnmf.userInfoCallBack",
-  });
-  window.vnmf["assignUserInfo"] = input.success;
-};
+if (!window.vnmf) {
+  window.vnmf = {};
+  const requestNative = (data) => {
+    const key = "186d1aeb795dfe1012f992e0965dd618";
+    var tmp = encryptJson(data, key);
+    alert(tmp);
+  };
+  window.vnmf.requestUserInfo = (
+    input = { success: (callback = (res) => {}) }
+  ) => {
+    requestNative({
+      action: "get_user_info",
+      field: "fullname|email|phone",
+      function: "vnmf.userInfoCallBack",
+    });
+    window.vnmf["assignUserInfo"] = input.success;
+  };
 
-window.vnmf.userInfoCallBack = function (data) {
-  const key = "186d1aeb795dfe1012f992e0965dd618";
-  var tmp = JSON.parse(decrypt(data, key));
-  if (tmp.status == "SUCCESS") {
-    window.vnmf["assignUserInfo"](tmp);
-  } else if (tmp.status != "PERMISSION_DENIED") {
-    /// TODO: fail
-  }
-};
+  window.vnmf.userInfoCallBack = function (data) {
+    const key = "186d1aeb795dfe1012f992e0965dd618";
+    var tmp = JSON.parse(decrypt(data, key));
+    if (tmp.status == "SUCCESS") {
+      window.vnmf["assignUserInfo"](tmp);
+    } else if (tmp.status != "PERMISSION_DENIED") {
+      /// TODO: fail
+    }
+  };
 
-window.vnmf.requestPayment = (
-  input = { data: data, success: (callback = (res) => {}) }
-) => {
-  requestNative({ action: "payment", data: input.data });
-  window.vnmf["assignPayment"] = input.success;
-};
+  window.vnmf.requestPayment = (
+    input = { data: data, success: (callback = (res) => {}) }
+  ) => {
+    requestNative({ action: "payment", data: input.data });
+    window.vnmf["assignPayment"] = input.success;
+  };
 
-window.vnmf.paymentCallBack = function (data) {
-  const key = "186d1aeb795dfe1012f992e0965dd618";
-  var tmp = JSON.parse(decrypt(data, key));
-  window.vnmf["assignPayment"](tmp);
-};
+  window.vnmf.paymentCallBack = function (data) {
+    const key = "186d1aeb795dfe1012f992e0965dd618";
+    var tmp = JSON.parse(decrypt(data, key));
+    window.vnmf["assignPayment"](tmp);
+  };
+}
 const encryptJson = (inputData, key) => {
   var iv_base64 = CryptoJS.enc.Base64.stringify(
     CryptoJS.lib.WordArray.random(16)
